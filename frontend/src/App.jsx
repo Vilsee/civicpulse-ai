@@ -120,6 +120,13 @@ const FeedbackSubmission = ({ onSubmitted }) => {
                         >
                             {loading ? 'Processing...' : 'Submit Feedback'}
                         </button>
+
+                        <div style={{ margin: '1.5rem 0', textAlign: 'center', position: 'relative' }}>
+                            <hr style={{ border: 'none', borderTop: '1px solid #E2E8F0' }} />
+                            <span style={{ position: 'absolute', top: '-10px', left: '50%', transform: 'translateX(-50%)', background: 'white', padding: '0 1rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>OR</span>
+                        </div>
+
+                        <VoiceRecorder onSubmitted={onSubmitted} />
                     </>
                 )}
             </div>
@@ -212,6 +219,115 @@ const InsightsScreen = ({ stats }) => (
         </p>
     </div>
 )
+
+const VoiceRecorder = ({ onSubmitted }) => {
+    const [recording, setRecording] = useState(false)
+    const [mediaRecorder, setMediaRecorder] = useState(null)
+    const [audioChunks, setAudioChunks] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [msg, setMsg] = useState('')
+
+    const startRecording = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+            const recorder = new MediaRecorder(stream)
+            setMediaRecorder(recorder)
+
+            const chunks = []
+            recorder.ondataavailable = (e) => chunks.push(e.data)
+            recorder.onstop = () => setAudioChunks(chunks)
+
+            recorder.start()
+            setRecording(true)
+            setMsg('Recording...')
+        } catch (e) {
+            console.error(e)
+            setMsg('Microphone access denied')
+        }
+    }
+
+    const stopRecording = () => {
+        if (mediaRecorder) {
+            mediaRecorder.stop()
+            setRecording(false)
+            setMsg('Processing audio...')
+        }
+    }
+
+    useEffect(() => {
+        if (audioChunks.length > 0 && !recording) {
+            uploadAudio()
+        }
+    }, [audioChunks, recording])
+
+    const uploadAudio = async () => {
+        setLoading(true)
+        const blob = new Blob(audioChunks, { type: 'audio/webm' })
+        const formData = new FormData()
+        formData.append('file', blob, 'feedback.webm')
+
+        try {
+            const resp = await fetch(`${API_URL}/upload-audio`, {
+                method: 'POST',
+                body: formData
+            })
+            const result = await resp.json()
+            if (resp.ok) {
+                setMsg(`Success: "${result.transcription}"`)
+                setTimeout(() => {
+                    setMsg('')
+                    onSubmitted()
+                }, 3000)
+            } else {
+                setMsg('Transcription failed')
+            }
+        } catch (e) {
+            console.error(e)
+            setMsg('Error uploading audio')
+        } finally {
+            setLoading(false)
+            setAudioChunks([])
+        }
+    }
+
+    return (
+        <div className="card glass" style={{ marginTop: '1rem', textAlign: 'center' }}>
+            <h3>Voice Feedback</h3>
+            <p className="text-muted" style={{ fontSize: '0.9rem', marginBottom: '1rem' }}>Speak your mind, we'll transcribe it for you.</p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+                {!recording ? (
+                    <button
+                        className="btn-primary"
+                        onClick={startRecording}
+                        disabled={loading}
+                        style={{ width: '80px', height: '80px', borderRadius: '40px', background: 'var(--secondary-teal)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                    >
+                        <MessageSquare size={32} />
+                    </button>
+                ) : (
+                    <button
+                        className="btn-primary"
+                        onClick={stopRecording}
+                        style={{ width: '80px', height: '80px', borderRadius: '40px', background: 'var(--danger)', display: 'flex', justifyContent: 'center', alignItems: 'center', animation: 'pulse 1.5s infinite' }}
+                    >
+                        <div style={{ width: '24px', height: '24px', background: 'white', borderRadius: '4px' }}></div>
+                    </button>
+                )}
+
+                {msg && <p style={{ fontWeight: 600, color: 'var(--primary-blue)' }}>{msg}</p>}
+            </div>
+
+            <style>{`
+        @keyframes pulse {
+          0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+          70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+          100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+      `}</style>
+        </div>
+    )
+}
 
 const AdminUploadScreen = ({ onUploaded }) => {
     const [file, setFile] = useState(null)

@@ -95,6 +95,29 @@ CivicPulse AI features a **mobile-first, accessibility-centered design** optimiz
 
 ---
 
+## 🖼️ UI Screenshots
+
+> [!NOTE]  
+> The following are descriptive placeholders for the implemented UI. 
+
+### 1. Community Pulse Overview (Dashboard)
+![Dashboard Screen Placeholder](https://via.placeholder.com/800x450?text=Dashboard+Screen+-+CivicPulse+AI)
+*The main dashboard featuring summary cards and the ranked "Top Community Issues" list.*
+
+### 2. Share Your Feedback
+![Feedback Screen Placeholder](https://via.placeholder.com/400x700?text=Feedback+Submission+-+Mobile+UI)
+*The mobile-first feedback submission form with category selection and success states.*
+
+### 3. Feedback Analysis
+![Analysis Screen Placeholder](https://via.placeholder.com/800x600?text=Analysis+Screen+-+Sentiment+Tagging)
+*The administrative view showing all feedback items with AI-assigned sentiment badges and category tags.*
+
+### 4. Strategic Insights
+![Insights Screen Placeholder](https://via.placeholder.com/800x500?text=Insights+Screen+-+AI+Recommendations)
+*The AI-generated insights screen with executive summaries and suggested actions.*
+
+---
+
 ## 🛠️ Tech Stack
 
 - **Frontend**: React.js, Vite, Lucide React (Icons), Vanilla CSS (Custom Design System).

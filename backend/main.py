@@ -5,8 +5,13 @@ from typing import List, Optional
 import json
 import os
 from datetime import datetime
+import whisper
+import shutil
 
 app = FastAPI(title="CivicPulse AI API")
+
+# Load Whisper model (base is a good balance for speed/accuracy)
+model = whisper.load_model("base")
 
 # Enable CORS for frontend
 app.add_middleware(
@@ -125,6 +130,52 @@ async def upload_csv(file: UploadFile = File(...)):
             
     save_data(data)
     return {"message": f"Successfully uploaded {count} feedback items"}
+
+@app.post("/upload-audio")
+async def upload_audio(file: UploadFile = File(...)):
+    # Save temporary audio file
+    temp_file = f"temp_{file.filename}"
+    with open(temp_file, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+    
+    try:
+        # Transcribe using Whisper
+        result = model.transcribe(temp_file)
+        text = result["text"].strip()
+        
+        # Close the file before deleting
+        os.remove(temp_file)
+        
+        if not text:
+            return {"message": "Could not transcribe audio"}
+
+        # Process as regular feedback
+        data = load_data()
+        feedback = Feedback(text=text, category="Other") # Default category for voice
+        feedback.id = str(len(data) + 1)
+        feedback.timestamp = datetime.now().isoformat()
+        
+        # Sentiment logic (reuse existing)
+        text_lower = text.lower()
+        if any(word in text_lower for word in ["bad", "terrible", "broke", "issue", "problem"]):
+            feedback.sentiment = "Negative"
+        elif any(word in text_lower for word in ["good", "great", "excellent", "thanks", "helpful"]):
+            feedback.sentiment = "Positive"
+        else:
+            feedback.sentiment = "Neutral"
+        
+        data.append(feedback.dict())
+        save_data(data)
+        
+        return {
+            "message": "Audio feedback transcribed and saved",
+            "transcription": text,
+            "feedback": feedback
+        }
+    except Exception as e:
+        if os.path.exists(temp_file):
+            os.remove(temp_file)
+        raise HTTPException(status_code=500, detail=f"Transcription failed: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn
