@@ -1,0 +1,24 @@
+# Node
+node_modules/
+dist/
+.env
+
+# Python
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.venv/
+env/
+venv.bak/
+ENV/
+
+# Data
+data/*.json
+!data/.keep
+
+# IDEs
+.vscode/
+.idea/
+.DS_Store
