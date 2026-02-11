@@ -153,9 +153,9 @@ const AnalysisScreen = ({ feedbackList }) => {
     const filtered = filter === 'All' ? feedbackList : feedbackList.filter(f => f.sentiment === filter)
 
     return (
-        <div className="container">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <h1>Feedback Analysis</h1>
+        <div className="container stagger-in">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                <h1 className="glow-text">Analysis Engine</h1>
                 <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                     <Filter size={18} />
                     <select value={filter} onChange={(e) => setFilter(e.target.value)} style={{ padding: '0.4rem', borderRadius: '4px', border: '1px solid #ddd' }}>
@@ -305,37 +305,44 @@ const VoiceRecorder = ({ onSubmitted }) => {
     }
 
     return (
-        <div className="card glass" style={{ marginTop: '1rem', textAlign: 'center' }}>
-            <h3>Voice Feedback</h3>
-            <p className="text-muted" style={{ fontSize: '0.9rem', marginBottom: '1rem' }}>Speak your mind, we'll transcribe it for you.</p>
+        <div className="card glass hover-glow" style={{ marginTop: '1rem', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+            <div className="shimmer" style={{ position: 'absolute', inset: 0, opacity: 0.3, pointerEvents: 'none' }}></div>
+            <h3 style={{ marginBottom: '0.5rem' }}>Voice Insights</h3>
+            <p className="text-muted" style={{ fontSize: '0.9rem', marginBottom: '1.5rem' }}>Share your thoughts audibly.</p>
 
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem' }}>
+                {recording && (
+                    <div className="wave-animation">
+                        {[1, 2, 3, 4, 5, 6, 7, 8].map(i => <div key={i} className="wave-bar"></div>)}
+                    </div>
+                )}
+
                 {!recording ? (
                     <button
-                        className="btn-primary"
+                        className="btn-primary hover-glow"
                         onClick={startRecording}
                         disabled={loading}
-                        style={{ width: '80px', height: '80px', borderRadius: '40px', background: 'var(--secondary-teal)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                        style={{ width: '90px', height: '90px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--secondary-teal), #2DD4BF)', display: 'flex', justifyContent: 'center', alignItems: 'center', boxShadow: '0 0 20px rgba(45, 212, 191, 0.4)' }}
                     >
-                        <MessageSquare size={32} />
+                        <MessageSquare size={36} style={{ filter: 'drop-shadow(0 0 5px rgba(255,255,255,0.5))' }} />
                     </button>
                 ) : (
                     <button
                         className="btn-primary"
                         onClick={stopRecording}
-                        style={{ width: '80px', height: '80px', borderRadius: '40px', background: 'var(--danger)', display: 'flex', justifyContent: 'center', alignItems: 'center', animation: 'pulse 1.5s infinite' }}
+                        style={{ width: '90px', height: '90px', borderRadius: '50%', background: 'var(--danger)', display: 'flex', justifyContent: 'center', alignItems: 'center', animation: 'pulse 1.5s infinite', border: '4px solid rgba(255,255,255,0.2)' }}
                     >
-                        <div style={{ width: '24px', height: '24px', background: 'white', borderRadius: '4px' }}></div>
+                        <div style={{ width: '28px', height: '28px', background: 'white', borderRadius: '6px' }}></div>
                     </button>
                 )}
 
-                {msg && <p style={{ fontWeight: 600, color: 'var(--primary-blue)' }}>{msg}</p>}
+                {msg && <p style={{ fontWeight: 700, color: 'var(--secondary-teal)', textShadow: '0 0 10px rgba(13, 148, 136, 0.3)' }}>{msg}</p>}
             </div>
 
             <style>{`
         @keyframes pulse {
           0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-          70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+          70% { transform: scale(1.1); box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); }
           100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
       `}</style>
