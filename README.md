@@ -102,11 +102,11 @@ CivicPulse AI features a **mobile-first, accessibility-centered design** optimiz
 *The main dashboard featuring summary cards and the ranked "Top Community Issues" list with glassmorphism effects.*
 
 ### 2. Share Your Feedback (Voice & Text)
-![Feedback Screen Placeholder](https://via.placeholder.com/400x700?text=Feedback+Submission+-+Voice+Support)
+![Feedback Screen](docs/images/feedback.png)
 *The mobile-first feedback submission form featuring the newly integrated **Whisper-powered Voice Recorder** for community accessibility.*
 
 ### 3. Feedback Analysis
-![Analysis Screen Placeholder](https://via.placeholder.com/800x600?text=Analysis+Screen+-+Sentiment+Tagging)
+![Analysis Screen](docs/images/analysis.png)
 *The administrative view showing all feedback items with AI-assigned sentiment badges and category tags.*
 
 ### 4. Strategic Insights
