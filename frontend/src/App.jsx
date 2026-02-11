@@ -431,7 +431,7 @@ export default function App() {
                 {activeTab === 'admin' && <AdminUploadScreen onUploaded={() => { fetchData(); setActiveTab('dashboard'); }} />}
             </main>
 
-            <div className="bottom-nav glass" style={{ margin: '0 1rem 1rem 1rem', borderRadius: '2rem', width: 'auto', bottom: '0.5rem' }}>
+            <div className="bottom-nav glass">
                 <button onClick={() => setActiveTab('dashboard')} style={{ background: 'none', border: 'none', color: activeTab === 'dashboard' ? 'var(--primary-blue)' : 'var(--text-muted)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
                     <LayoutDashboard size={22} strokeWidth={activeTab === 'dashboard' ? 2.5 : 2} />
                     <div style={{ fontSize: '0.65rem', fontWeight: activeTab === 'dashboard' ? 700 : 500 }}>Overview</div>

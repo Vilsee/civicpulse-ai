@@ -29,7 +29,10 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, .logo-text {
+h1,
+h2,
+h3,
+.logo-text {
   font-family: 'Outfit', sans-serif;
   font-weight: 700;
 }
@@ -86,9 +89,20 @@ button {
   font-weight: 600;
 }
 
-.badge-positive { background: #DCFCE7; color: #166534; }
-.badge-neutral { background: #F1F5F9; color: #475569; }
-.badge-negative { background: #FEE2E2; color: #991B1B; }
+.badge-positive {
+  background: #DCFCE7;
+  color: #166534;
+}
+
+.badge-neutral {
+  background: #F1F5F9;
+  color: #475569;
+}
+
+.badge-negative {
+  background: #FEE2E2;
+  color: #991B1B;
+}
 
 /* Mobile Bottom Nav */
 .bottom-nav {
@@ -105,8 +119,17 @@ button {
   z-index: 100;
 }
 
-@media (min-width: 768px) {
-  .bottom-nav {
-    display: none;
-  }
+/* Navigation shared across sizes */
+.bottom-nav {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 2rem);
+  max-width: 600px;
+  height: 4.5rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1000;
 }
