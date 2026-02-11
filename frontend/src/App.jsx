@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { LayoutDashboard, MessageSquare, PieChart, Upload, Info, Filter } from 'lucide-react'
+import Spline from '@splinetool/react-spline'
 
 const API_URL = 'http://localhost:8000'
 
@@ -431,45 +432,52 @@ export default function App() {
     }, [])
 
     return (
-        <div style={{ paddingBottom: '6rem' }}>
-            <nav className="gradient-bg" style={{ padding: '1rem 0', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}>
-                <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                        <div style={{ width: '32px', height: '32px', background: 'white', borderRadius: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--primary-blue)', fontWeight: 800 }}>CP</div>
-                        <span className="logo-text" style={{ fontSize: '1.5rem', letterSpacing: '-0.5px' }}>CivicPulse AI</span>
+        <div style={{ minHeight: '100vh', position: 'relative' }}>
+            <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1, pointerEvents: 'none' }}>
+                <Suspense fallback={<div className="gradient-bg" style={{ width: '100%', height: '100%' }} />}>
+                    <Spline scene="https://prod.spline.design/rilDewud8EsZCP7d/scene.splinecode" />
+                </Suspense>
+            </div>
+
+            <div style={{ paddingBottom: '6rem', position: 'relative', zIndex: 1 }}>
+                <nav className="gradient-bg" style={{ padding: '1rem 0', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}>
+                    <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <div style={{ width: '32px', height: '32px', background: 'white', borderRadius: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--primary-blue)', fontWeight: 800 }}>CP</div>
+                            <span className="logo-text" style={{ fontSize: '1.5rem', letterSpacing: '-0.5px' }}>CivicPulse AI</span>
+                        </div>
+                        <button onClick={() => setActiveTab('admin')} style={{ background: 'rgba(255,255,255,0.2)', color: 'white', padding: '0.5rem 1rem', borderRadius: 'var(--radius-md)', fontSize: '0.85rem' }}>
+                            Admin
+                        </button>
                     </div>
-                    <button onClick={() => setActiveTab('admin')} style={{ background: 'rgba(255,255,255,0.2)', color: 'white', padding: '0.5rem 1rem', borderRadius: 'var(--radius-md)', fontSize: '0.85rem' }}>
-                        Admin
+                </nav>
+
+                <main style={{ paddingTop: '1.5rem' }}>
+                    {activeTab === 'dashboard' && <Dashboard stats={stats} />}
+                    {activeTab === 'feedback' && <FeedbackSubmission onSubmitted={() => { fetchData(); setActiveTab('dashboard'); }} />}
+                    {activeTab === 'analysis' && <AnalysisScreen feedbackList={feedbackList} />}
+                    {activeTab === 'insights' && <InsightsScreen stats={stats} />}
+                    {activeTab === 'admin' && <AdminUploadScreen onUploaded={() => { fetchData(); setActiveTab('dashboard'); }} />}
+                </main>
+
+                <div className="bottom-nav glass">
+                    <button onClick={() => setActiveTab('dashboard')} style={{ background: 'none', border: 'none', color: activeTab === 'dashboard' ? 'var(--primary-blue)' : 'var(--text-muted)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+                        <LayoutDashboard size={22} strokeWidth={activeTab === 'dashboard' ? 2.5 : 2} />
+                        <div style={{ fontSize: '0.65rem', fontWeight: activeTab === 'dashboard' ? 700 : 500 }}>Overview</div>
+                    </button>
+                    <button onClick={() => setActiveTab('feedback')} style={{ background: 'none', border: 'none', color: activeTab === 'feedback' ? 'var(--primary-blue)' : 'var(--text-muted)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+                        <MessageSquare size={22} strokeWidth={activeTab === 'feedback' ? 2.5 : 2} />
+                        <div style={{ fontSize: '0.65rem', fontWeight: activeTab === 'feedback' ? 700 : 500 }}>Feedback</div>
+                    </button>
+                    <button onClick={() => setActiveTab('analysis')} style={{ background: 'none', border: 'none', color: activeTab === 'analysis' ? 'var(--primary-blue)' : 'var(--text-muted)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+                        <PieChart size={22} strokeWidth={activeTab === 'analysis' ? 2.5 : 2} />
+                        <div style={{ fontSize: '0.65rem', fontWeight: activeTab === 'analysis' ? 700 : 500 }}>Analysis</div>
+                    </button>
+                    <button onClick={() => setActiveTab('insights')} style={{ background: 'none', border: 'none', color: activeTab === 'insights' ? 'var(--primary-blue)' : 'var(--text-muted)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+                        <Info size={22} strokeWidth={activeTab === 'insights' ? 2.5 : 2} />
+                        <div style={{ fontSize: '0.65rem', fontWeight: activeTab === 'insights' ? 700 : 500 }}>Insights</div>
                     </button>
                 </div>
-            </nav>
-
-            <main style={{ paddingTop: '1.5rem' }}>
-                {activeTab === 'dashboard' && <Dashboard stats={stats} />}
-                {activeTab === 'feedback' && <FeedbackSubmission onSubmitted={() => { fetchData(); setActiveTab('dashboard'); }} />}
-                {activeTab === 'analysis' && <AnalysisScreen feedbackList={feedbackList} />}
-                {activeTab === 'insights' && <InsightsScreen stats={stats} />}
-                {activeTab === 'admin' && <AdminUploadScreen onUploaded={() => { fetchData(); setActiveTab('dashboard'); }} />}
-            </main>
-
-            <div className="bottom-nav glass">
-                <button onClick={() => setActiveTab('dashboard')} style={{ background: 'none', border: 'none', color: activeTab === 'dashboard' ? 'var(--primary-blue)' : 'var(--text-muted)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-                    <LayoutDashboard size={22} strokeWidth={activeTab === 'dashboard' ? 2.5 : 2} />
-                    <div style={{ fontSize: '0.65rem', fontWeight: activeTab === 'dashboard' ? 700 : 500 }}>Overview</div>
-                </button>
-                <button onClick={() => setActiveTab('feedback')} style={{ background: 'none', border: 'none', color: activeTab === 'feedback' ? 'var(--primary-blue)' : 'var(--text-muted)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-                    <MessageSquare size={22} strokeWidth={activeTab === 'feedback' ? 2.5 : 2} />
-                    <div style={{ fontSize: '0.65rem', fontWeight: activeTab === 'feedback' ? 700 : 500 }}>Feedback</div>
-                </button>
-                <button onClick={() => setActiveTab('analysis')} style={{ background: 'none', border: 'none', color: activeTab === 'analysis' ? 'var(--primary-blue)' : 'var(--text-muted)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-                    <PieChart size={22} strokeWidth={activeTab === 'analysis' ? 2.5 : 2} />
-                    <div style={{ fontSize: '0.65rem', fontWeight: activeTab === 'analysis' ? 700 : 500 }}>Analysis</div>
-                </button>
-                <button onClick={() => setActiveTab('insights')} style={{ background: 'none', border: 'none', color: activeTab === 'insights' ? 'var(--primary-blue)' : 'var(--text-muted)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-                    <Info size={22} strokeWidth={activeTab === 'insights' ? 2.5 : 2} />
-                    <div style={{ fontSize: '0.65rem', fontWeight: activeTab === 'insights' ? 700 : 500 }}>Insights</div>
-                </button>
             </div>
-        </div>
-    )
+            )
 }
