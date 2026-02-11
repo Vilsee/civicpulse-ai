@@ -435,7 +435,7 @@ export default function App() {
         <div style={{ minHeight: '100vh', position: 'relative' }}>
             <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1, pointerEvents: 'none' }}>
                 <Suspense fallback={<div className="gradient-bg" style={{ width: '100%', height: '100%' }} />}>
-                    <Spline scene="https://prod.spline.design/rilDewud8EsZCP7d/scene.splinecode" />
+                    <Spline scene="https://prod.spline.design/6Wq1Q7HUfS8stD0S/scene.splinecode" />
                 </Suspense>
             </div>
 
@@ -479,5 +479,6 @@ export default function App() {
                     </button>
                 </div>
             </div>
-            )
+        </div>
+    )
 }
