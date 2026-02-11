@@ -5,42 +5,56 @@ const API_URL = 'http://localhost:8000'
 
 const Dashboard = ({ stats }) => (
     <div className="container">
-        <h1 style={{ marginBottom: '1.5rem' }}>Community Pulse Overview</h1>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
+        <h1 style={{ marginBottom: '2rem', fontSize: '2.5rem', background: 'linear-gradient(to right, #fff, var(--secondary-teal))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            Community Pulse
+        </h1>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
             <div className="card glass">
-                <p className="text-muted">Total Feedback</p>
-                <h2>{stats.total || 0}</h2>
+                <p className="text-muted" style={{ fontSize: '0.9rem', fontWeight: 600, textTransform: 'uppercase' }}>Engagement</p>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', marginTop: '0.5rem' }}>
+                    <h2 style={{ fontSize: '3rem' }}>{stats.total || 0}</h2>
+                    <span style={{ color: 'var(--success)', fontSize: '0.9rem', fontWeight: 700 }}>↑ 12%</span>
+                </div>
+                <p className="text-muted" style={{ fontSize: '0.8rem', marginTop: '0.5rem' }}>Total feedback entries</p>
             </div>
             <div className="card glass">
-                <p className="text-muted">Overall Sentiment</p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <h2>{stats.sentiment || 'None'}</h2>
-                    <span className={`badge badge-${(stats.sentiment || 'neutral').toLowerCase()}`}>
+                <p className="text-muted" style={{ fontSize: '0.9rem', fontWeight: 600, textTransform: 'uppercase' }}>Sentiment</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '0.5rem' }}>
+                    <h2 style={{ fontSize: '2.5rem' }}>{stats.sentiment || 'None'}</h2>
+                    <span className={`badge badge-${(stats.sentiment || 'neutral').toLowerCase()}`} style={{ fontSize: '1.2rem', padding: '0.5rem' }}>
                         {stats.sentiment === 'Positive' ? '😊' : stats.sentiment === 'Negative' ? '😟' : '😐'}
                     </span>
                 </div>
+                <p className="text-muted" style={{ fontSize: '0.8rem', marginTop: '0.5rem' }}>Automated AI detection</p>
             </div>
             <div className="card glass">
-                <p className="text-muted">Most Common Issue</p>
-                <h2>{stats.top_issue || 'None'}</h2>
+                <p className="text-muted" style={{ fontSize: '0.9rem', fontWeight: 600, textTransform: 'uppercase' }}>Hot Topic</p>
+                <h2 style={{ fontSize: '2.2rem', marginTop: '0.5rem', color: 'var(--secondary-teal)' }}>{stats.top_issue || 'None'}</h2>
+                <p className="text-muted" style={{ fontSize: '0.8rem', marginTop: '0.5rem' }}>Most discussed category</p>
             </div>
         </div>
 
-        <div className="card glass" style={{ marginTop: '2rem' }}>
-            <h3>Top Community Issues</h3>
-            <div style={{ marginTop: '1rem' }}>
+        <div className="card glass" style={{ marginTop: '2.5rem' }}>
+            <h3 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>Community Issues Tracker</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 {(stats.top_issues_list || []).map(item => (
-                    <div key={item.name} style={{ marginBottom: '1rem' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                    <div key={item.name}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontWeight: 600 }}>
                             <span>{item.name}</span>
-                            <span>{item.val}%</span>
+                            <span style={{ color: 'var(--secondary-teal)' }}>{item.val}%</span>
                         </div>
-                        <div style={{ height: '8px', background: '#E2E8F0', borderRadius: '4px', overflow: 'hidden' }}>
-                            <div style={{ width: `${item.val}%`, height: '100%', background: 'var(--secondary-teal)' }}></div>
+                        <div style={{ height: '10px', background: 'rgba(255,255,255,0.05)', borderRadius: '5px', overflow: 'hidden' }}>
+                            <div
+                                style={{
+                                    width: `${item.val}%`,
+                                    height: '100%',
+                                    background: 'linear-gradient(to right, var(--primary-blue), var(--secondary-teal))',
+                                    boxShadow: '0 0 10px var(--secondary-teal)'
+                                }}
+                            ></div>
                         </div>
                     </div>
                 ))}
-                {(!stats.top_issues_list || stats.top_issues_list.length === 0) && <p className="text-muted">No data available yet.</p>}
             </div>
         </div>
     </div>
@@ -77,53 +91,53 @@ const FeedbackSubmission = ({ onSubmitted }) => {
     }
 
     return (
-        <div className="container">
-            <h1>Share Your Feedback</h1>
-            <div className="card glass" style={{ marginTop: '1.5rem' }}>
+        <div className="container" style={{ maxWidth: '800px' }}>
+            <h1 style={{ marginBottom: '2rem', textAlign: 'center' }}>Voice Your Opinion</h1>
+            <div className="card glass" style={{ padding: '3rem' }}>
                 {success ? (
                     <div style={{ textAlign: 'center', padding: '2rem' }}>
-                        <div style={{ fontSize: '3rem' }}>✅</div>
-                        <h2 style={{ color: 'var(--success)' }}>Thank You!</h2>
-                        <p>Your feedback has been received and is being analyzed.</p>
+                        <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>✨</div>
+                        <h2 style={{ color: 'var(--success)', fontSize: '2rem' }}>Feedback Captured</h2>
+                        <p className="text-muted">Directly contributing to community intelligence.</p>
                     </div>
                 ) : (
                     <>
-                        <div style={{ marginBottom: '1rem' }}>
-                            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Tell us what's on your mind</label>
+                        <div style={{ marginBottom: '1.5rem' }}>
+                            <label style={{ display: 'block', marginBottom: '0.75rem', fontWeight: 600, color: 'var(--secondary-teal)' }}>Message</label>
                             <textarea
                                 value={text}
                                 onChange={(e) => setText(e.target.value)}
-                                placeholder="Describe the issue or suggestion..."
-                                style={{ width: '100%', height: '150px', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid #CBD5E1', outline: 'none' }}
+                                placeholder="What's happening in your neighborhood?"
+                                style={{ fontSize: '1rem' }}
                             />
                         </div>
-                        <div style={{ marginBottom: '1.5rem' }}>
-                            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Category</label>
-                            <select
-                                value={category}
-                                onChange={(e) => setCategory(e.target.value)}
-                                style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid #CBD5E1' }}
-                            >
-                                <option>Transport</option>
-                                <option>Safety</option>
-                                <option>Jobs</option>
-                                <option>Education</option>
-                                <option>Events</option>
-                                <option>Other</option>
-                            </select>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '2rem' }}>
+                            <div>
+                                <label style={{ display: 'block', marginBottom: '0.75rem', fontWeight: 600, color: 'var(--secondary-teal)' }}>Category</label>
+                                <select value={category} onChange={(e) => setCategory(e.target.value)} style={{ width: '100%' }}>
+                                    <option>Transport</option>
+                                    <option>Safety</option>
+                                    <option>Jobs</option>
+                                    <option>Education</option>
+                                    <option>Events</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'flex-end' }}>
+                                <button
+                                    className="btn-primary"
+                                    style={{ width: '100%', height: '3.2rem' }}
+                                    onClick={handleSubmit}
+                                    disabled={loading}
+                                >
+                                    {loading ? 'Processing...' : 'Submit Feedback'}
+                                </button>
+                            </div>
                         </div>
-                        <button
-                            className="btn-primary"
-                            style={{ width: '100%', opacity: loading ? 0.7 : 1 }}
-                            onClick={handleSubmit}
-                            disabled={loading}
-                        >
-                            {loading ? 'Processing...' : 'Submit Feedback'}
-                        </button>
 
-                        <div style={{ margin: '1.5rem 0', textAlign: 'center', position: 'relative' }}>
-                            <hr style={{ border: 'none', borderTop: '1px solid #E2E8F0' }} />
-                            <span style={{ position: 'absolute', top: '-10px', left: '50%', transform: 'translateX(-50%)', background: 'white', padding: '0 1rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>OR</span>
+                        <div style={{ margin: '2rem 0', textAlign: 'center', position: 'relative' }}>
+                            <hr />
+                            <span style={{ position: 'absolute', top: '-12px', left: '50%', transform: 'translateX(-50%)', background: 'var(--bg-deep)', padding: '0 1.5rem', fontSize: '0.8rem', color: 'var(--text-muted)', letterSpacing: '0.1em' }}>POWERED BY WHISPER AI</span>
                         </div>
 
                         <VoiceRecorder onSubmitted={onSubmitted} />
